@@ -1,0 +1,4 @@
+*.o
+*.bpf.o
+scx_userland
+build/

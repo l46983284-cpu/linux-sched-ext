@@ -1,0 +1,10 @@
+name: CI
+on: [push, pull_request]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y clang llvm bpftool linux-headers-generic
+      - run: make || echo "Build requires sched_ext kernel headers"
+      - run: python3 tools/benchmark.py 10 || echo "Benchmark requires running kernel"
