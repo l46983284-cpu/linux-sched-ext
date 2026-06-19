@@ -1,10 +1,35 @@
 name: CI
-on: [push, pull_request]
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
 jobs:
-  check:
+  portable-checks:
+    name: portable checks
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: sudo apt-get update && sudo apt-get install -y clang llvm bpftool linux-headers-generic
-      - run: make || echo "Build requires sched_ext kernel headers"
-      - run: python3 tools/benchmark.py 10 || echo "Benchmark requires running kernel"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Python syntax
+        run: python -m compileall tools examples tests
+      - name: Unit tests and benchmark smoke test
+        run: make check
+
+  optional-scheduler-build:
+    name: optional sched_ext build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install BPF toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang llvm bpftool libbpf-dev linux-headers-generic pkg-config
+      - name: Build when runner headers support sched_ext
+        run: make build-optional

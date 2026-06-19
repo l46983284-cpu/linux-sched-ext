@@ -1,0 +1,32 @@
+name: Benchmark report
+
+description: Share benchmark results from a scheduler experiment
+labels: [benchmark, performance]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please include raw JSON from `tools/benchmark.py` when possible.
+  - type: textarea
+    id: setup
+    attributes:
+      label: Setup
+      description: Kernel, CPU, scheduler state, and workload
+    validations:
+      required: true
+  - type: textarea
+    id: command
+    attributes:
+      label: Command
+      description: Benchmark command used
+      placeholder: python3 tools/benchmark.py --samples 1000 --warmup 50 --json
+    validations:
+      required: true
+  - type: textarea
+    id: results
+    attributes:
+      label: Results
+      description: Paste benchmark output
+      render: json
+    validations:
+      required: true

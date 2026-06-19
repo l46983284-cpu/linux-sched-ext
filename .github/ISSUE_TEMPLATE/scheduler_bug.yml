@@ -1,0 +1,38 @@
+name: Scheduler bug
+
+description: Report a scheduler policy, attach, or runtime issue
+labels: [bug, scheduler]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a scheduler issue. Please run `python3 tools/check_sched_ext.py` and include the output.
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Kernel version, distro, sched_ext status, bpftool/libbpf versions
+      placeholder: |
+        uname -a:
+        tools/check_sched_ext.py output:
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction steps
+      description: Exact commands and workload used
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
