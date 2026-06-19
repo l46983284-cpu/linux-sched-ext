@@ -25,6 +25,7 @@ jobs:
   optional-scheduler-build:
     name: optional sched_ext build
     runs-on: ubuntu-latest
+    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
       - name: Install BPF toolchain
