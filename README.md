@@ -27,6 +27,7 @@ config/
   workload_rules.example.json  Reviewable user-space workload classification rules
 tools/
   benchmark.py                 Fork/exec latency benchmark with JSON output
+  compare_benchmarks.py        Before/after benchmark delta reporter
   check_sched_ext.py           Host capability and dependency preflight
   classify_workload.py         Rule-based workload classification smoke tool
 examples/
