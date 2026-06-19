@@ -1,15 +1,14 @@
 # Changelog
 
+All notable changes to `linux-sched-ext` are documented here.
+
 ## Unreleased
 
-- Backdated contribution #1
+### Added
+- Project README with layout, requirements, safety notes, and quick-start commands.
+- Security model documenting kernel-facing risks and review checklist.
+- Roadmap for scheduler policy, testing, and release milestones.
+- Portable benchmark tooling and tests that run without privileged kernel features.
 
-- Improvement #2: minor optimization and cleanup
-
-- Improvement #3: minor optimization and cleanup
-
-- Improvement #4: minor optimization and cleanup
-
-- Improvement #5: minor optimization and cleanup
-
-- Improvement #6: minor optimization and cleanup
+### Changed
+- CI now separates portable validation from kernel-dependent scheduler builds.
