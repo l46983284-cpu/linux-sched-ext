@@ -29,11 +29,16 @@ struct {
     __type(value, struct sched_stat);
 } sched_stats SEC(".maps");
 
-static bool is_ml_process(const char *comm)
+static __always_inline bool comm_has_prefix2(const char *comm, char first, char second)
 {
-    return comm[0] == 'p' && comm[1] == 'y' ||  // python
-           comm[0] == 't' && comm[1] == 'o' ||  // torch/train
-           comm[0] == 'j' && comm[1] == 'a';    // jax
+    return comm[0] == first && comm[1] == second;
+}
+
+static __always_inline bool is_ml_process(const char *comm)
+{
+    return comm_has_prefix2(comm, 'p', 'y') ||  // python
+           comm_has_prefix2(comm, 't', 'o') ||  // torch/train
+           comm_has_prefix2(comm, 'j', 'a');    // jax
 }
 
 SEC("struct_ops/enqueue")
@@ -50,12 +55,13 @@ void BPF_PROG(scx_enqueue, struct task_struct *p, u64 enq_flags)
     ctx->pid = p->pid;
     bpf_get_current_comm(ctx->comm, sizeof(ctx->comm));
     ctx->is_ml_workload = is_ml_process(ctx->comm);
+    ctx->start_time = bpf_ktime_get_ns();
     
     if (ctx->is_ml_workload) {
         // ML workloads get longer time slices for better throughput
         scx_bpf_dispatch(p, ML_DSQ, SCX_SLICE_DFL * 4, enq_flags);
         
-        u32 key = 0;
+        __u32 key = 0;
         struct sched_stat *stat = bpf_map_lookup_elem(&sched_stats, &key);
         if (stat)
             stat->ml_tasks_scheduled++;
@@ -71,9 +77,12 @@ void BPF_PROG(scx_dequeue, struct task_struct *p, u64 deq_flags)
 {
     struct task_ctx *ctx = bpf_task_storage_get(&task_ctx_stor, p, 0, 0);
     if (ctx) {
-        u64 runtime = bpf_ktime_get_ns() - ctx->start_time;
-        u32 key = 0;
+        __u64 now = bpf_ktime_get_ns();
+        __u64 runtime = 0;
+        __u32 key = 0;
         struct sched_stat *stat = bpf_map_lookup_elem(&sched_stats, &key);
+        if (ctx->start_time && now >= ctx->start_time)
+            runtime = now - ctx->start_time;
         if (stat) {
             stat->total_runtime_ns += runtime;
             stat->context_switches++;

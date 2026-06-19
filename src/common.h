@@ -4,17 +4,17 @@
 #define TASK_COMM_LEN 16
 
 struct task_ctx {
-    u32 pid;
+    __u32 pid;
     char comm[TASK_COMM_LEN];
-    u64 vruntime;
-    u64 start_time;
-    u32 priority;
+    __u64 vruntime;
+    __u64 start_time;
+    __u32 priority;
     bool is_ml_workload;
 };
 
 struct sched_stat {
-    u64 total_runtime_ns;
-    u64 context_switches;
-    u64 migrations;
-    u64 ml_tasks_scheduled;
+    __u64 total_runtime_ns;
+    __u64 context_switches;
+    __u64 migrations;
+    __u64 ml_tasks_scheduled;
 };
