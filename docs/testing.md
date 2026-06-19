@@ -45,13 +45,16 @@ python3 examples/ml_burst.py --workers 4 --seconds 20
 python3 examples/io_latency_probe.py --samples 100 --sleep 0.001
 ```
 
-Capture before/after benchmark data:
+Capture before/after benchmark data and compare p95 latency:
 
 ```bash
 python3 tools/benchmark.py --samples 1000 --warmup 50 --json > baseline.json
 # attach scheduler
 python3 tools/benchmark.py --samples 1000 --warmup 50 --json > scx-simple.json
+python3 tools/compare_benchmarks.py baseline.json scx-simple.json --threshold-pct 5
 ```
+
+The comparison verdict is intentionally based on p95 latency because scheduler regressions often show up in tails before means move.
 
 ## Reporting results
 
