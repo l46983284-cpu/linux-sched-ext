@@ -1,4 +1,24 @@
+# Build artifacts
 *.o
 *.bpf.o
 scx_userland
 build/
+dist/
+
+# Python caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Benchmark outputs
+*.jsonl
+baseline.json
+scx-simple.json
+
+# Editor/OS noise
+.DS_Store
+*.swp
+.vscode/
+.idea/
