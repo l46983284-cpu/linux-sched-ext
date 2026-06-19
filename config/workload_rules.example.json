@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "default_class": "interactive",
+  "rules": [
+    {
+      "class": "ml",
+      "prefixes": ["python", "torch", "jax"],
+      "slice_multiplier": 4,
+      "reason": "Training/inference processes usually benefit from longer throughput-oriented slices."
+    },
+    {
+      "class": "io",
+      "prefixes": ["fio", "sqlite", "postgres"],
+      "slice_multiplier": 1,
+      "reason": "I/O probes are tracked separately so latency regressions are visible."
+    }
+  ]
+}

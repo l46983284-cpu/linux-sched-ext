@@ -23,9 +23,12 @@ src/
   scx_simple.bpf.c    Minimal sched_ext BPF scheduler
   scx_userland.c      User-space loader and stats printer
   common.h            Shared BPF/user-space structs
+config/
+  workload_rules.example.json  Reviewable user-space workload classification rules
 tools/
-  benchmark.py        Fork/exec latency benchmark with JSON output
-  check_sched_ext.py  Host capability and dependency preflight
+  benchmark.py                 Fork/exec latency benchmark with JSON output
+  check_sched_ext.py           Host capability and dependency preflight
+  classify_workload.py         Rule-based workload classification smoke tool
 examples/
   ml_burst.py         Synthetic ML-like CPU workload generator
 docs/
@@ -59,6 +62,12 @@ Run tests and benchmark smoke checks:
 
 ```bash
 make check
+```
+
+Try the reviewable workload classifier rules:
+
+```bash
+python3 tools/classify_workload.py python3 --json
 ```
 
 Build on a supported host:
